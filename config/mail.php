@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'info@smartcodes.co.tz'),
-        'name' => env('MAIL_FROM_NAME', 'CHOMOKA'),
+        'address' => env('MAIL_FROM_ADDRESS', ''),
+        'name' => env('MAIL_FROM_NAME', ''),
     ],
 
     /*

@@ -35,35 +35,35 @@ class PassportController extends Controller
            return response()->json(['error'=>'Unauthorised'], 401);
        }
     }
- 
-   /**
-    * Register api
-    *
-    * @return \Illuminate\Http\Response
-    */
- 
-    public function register(Request $request){
- 
-       $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required',
-            'c_password' => 'required|same:password',
-       ]);
-       
-        if ($validator->fails()) {
-
-            return response()->json(['error'=>$validator->errors()], 401);
-        }
-       
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $success['token'] =  $user->createToken('MyApp')->accessToken;
-        $success['name'] =  $user->name;
-
-        return response()->json(['success'=>$success], $this->successStatus);
-    }
+// 
+//   /**
+//    * Register api
+//    *
+//    * @return \Illuminate\Http\Response
+//    */
+// 
+//    public function register(Request $request){
+// 
+//       $validator = Validator::make($request->all(), [
+//            'name' => 'required',
+//            'email' => 'required|email',
+//            'password' => 'required',
+//            'c_password' => 'required|same:password',
+//       ]);
+//       
+//        if ($validator->fails()) {
+//
+//            return response()->json(['error'=>$validator->errors()], 401);
+//        }
+//       
+//        $input = $request->all();
+//        $input['password'] = bcrypt($input['password']);
+//        $user = User::create($input);
+//        $success['token'] =  $user->createToken('MyApp')->accessToken;
+//        $success['name'] =  $user->name;
+//
+//        return response()->json(['success'=>$success], $this->successStatus);
+//    }
  
    /**
     * receive request
@@ -73,9 +73,9 @@ class PassportController extends Controller
  
     public function receiveRequest(Request $request){
         $rq_id= uniqid();
-        Log::info("request : ".$request->getContent()." [$rq_id]");//log request
-        //Log::info("request : ". var_export(str_getcsv($request->getContent()),false)." [$rq_id]");
-        $dispatch=ProcessRequestJob::dispatch($request->getContent())->onQueue('chomoka')->delay(5);//dispatch job with 5 seconds delay
+        
+        Log::info("request : ".request('data')." [$rq_id]");//log request
+        $dispatch=ProcessRequestJob::dispatch(request('data'))->onQueue('chomoka')->delay(5);//dispatch job onto a queue name chomoka with 5 seconds processing delay
         
         if($dispatch){
             

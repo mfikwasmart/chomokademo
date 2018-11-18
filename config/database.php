@@ -41,11 +41,11 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', 'mpaperdb.codbtkbtrktv.us-west-2.rds.amazonaws.com'),
+            'host' => env('DB_HOST', ''),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'chomoka'),
-            'username' => env('DB_USERNAME', 'chomoka'),
-            'password' => env('DB_PASSWORD', '1234@chomoka'),
+            'database' => env('DB_DATABASE', ''),
+            'username' => env('DB_USERNAME', ''),
+            'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

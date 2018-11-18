@@ -36,32 +36,32 @@ class ProcessRequestJob implements ShouldQueue
      */
     public function handle(){
         
-        $lines = explode(PHP_EOL, $this->rq);
+        $lines = explode(PHP_EOL, $this->rq);//extract the csv request lines
         foreach ($lines as $line) {
             
             $temp= str_getcsv($line);
           
-            $check=DB::table('movies')->where('movie_title',$temp[0])->where('movie_url', $temp[2])->pluck('id'); //check movie title existance
+            $check=DB::table('movies')->where('movie_title', urldecode($temp[0]))->where('movie_url', urldecode($temp[2]))->pluck('id'); //check movie title and image url existance
            
             if(count($check) > 0){
                 
-                Log::info("movie exists : ".$temp[2]);
+                Log::info("movie exists : ".urldecode($temp[2]));
                 continue;
             }
             
-            $save=Movie::create(['movie_title' => $temp[0],'movie_overview'=>$temp[1],'movie_url'=>$temp[2]]);
+            $save=Movie::create(['movie_title' => urldecode($temp[0]),'movie_overview'=> urldecode($temp[1]),'movie_url'=> urldecode($temp[2])]); //save movie into the database
             if($save){
                 
-                Log::info("movie saved : ".$temp[0]);
+                Log::info("movie saved : ".urldecode($temp[0]));
                 //send notification email to admin
-                Mail::send('emails.notification', ['movie_title' => $temp[0]], function ($m){
-                    $m->from('admin@smartcodes.co.tz', 'Chomoka Administrator');
+                Mail::send('emails.notification', ['movie_title' => urldecode($temp[0])], function ($m){
+                    $m->from('', 'Chomoka');
 
-                    $m->to('mfikwa@smartcodes.co.tz', 'Administrator')->subject('Chomoka Notification!');
+                    $m->to('', 'Administrator')->subject('Chomoka Notification!');
                 });
             }else{
 
-                Log::info("movie not saved : ".$temp[0]);
+                Log::info("movie not saved : ".urldecode($temp[0]));
             }
         }
     }
